@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Конвертер величин | Telegram</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Шапка -->
+        <header class="header">
+            <h1><i class="fas fa-calculator"></i> Конвертер величин</h1>
+            <div class="theme-toggle" onclick="toggleTheme()">
+                <i class="fas fa-moon" id="theme-icon"></i>
+            </div>
+        </header>
+
+        <!-- Основной контент -->
+        <main class="main-content">
+            <!-- Выбор категории -->
+            <div class="category-section">
+                <h2><i class="fas fa-layer-group"></i> Категория</h2>
+                <div class="category-buttons">
+                    <button class="category-btn active" data-category="length">
+                        <i class="fas fa-ruler"></i> Длина
+                    </button>
+                    <button class="category-btn" data-category="weight">
+                        <i class="fas fa-weight-scale"></i> Вес
+                    </button>
+                    <button class="category-btn" data-category="temperature">
+                        <i class="fas fa-temperature-half"></i> Температура
+                    </button>
+                    <button class="category-btn" data-category="volume">
+                        <i class="fas fa-wine-bottle"></i> Объём
+                    </button>
+                    <button class="category-btn" data-category="area">
+                        <i class="fas fa-vector-square"></i> Площадь
+                    </button>
+                    <button class="category-btn" data-category="speed">
+                        <i class="fas fa-gauge-high"></i> Скорость
+                    </button>
+                    <button class="category-btn" data-category="time">
+                        <i class="fas fa-clock"></i> Время
+                    </button>
+                    <button class="category-btn" data-category="currency">
+                        <i class="fas fa-money-bill-wave"></i> Валюта
+                    </button>
+                </div>
+            </div>
+
+            <!-- Конвертер -->
+            <div class="converter-section">
+                <h2><i class="fas fa-arrow-right-arrow-left"></i> Конвертер</h2>
+                
+                <div class="input-group">
+                    <div class="input-box">
+                        <label>Из:</label>
+                        <input type="number" id="inputValue" placeholder="0" value="1" step="any">
+                        <select id="fromUnit">
+                            <!-- Заполнится JavaScript -->
+                        </select>
+                    </div>
+                    
+                    <div class="swap-btn" onclick="swapUnits()">
+                        <i class="fas fa-right-left"></i>
+                    </div>
+                    
+                    <div class="input-box">
+                        <label>В:</label>
+                        <input type="text" id="outputValue" placeholder="0" readonly>
+                        <select id="toUnit">
+                            <!-- Заполнится JavaScript -->
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn convert-btn" onclick="convert()">
+                        <i class="fas fa-calculator"></i> Конвертировать
+                    </button>
+                    <button class="btn reset-btn" onclick="resetConverter()">
+                        <i class="fas fa-rotate-left"></i> Сбросить
+                    </button>
+                </div>
+                
+                <div class="quick-convert">
+                    <h3><i class="fas fa-bolt"></i> Быстрая конвертация</h3>
+                    <div class="quick-buttons">
+                        <!-- Заполнится JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- История -->
+            <div class="history-section">
+                <h2><i class="fas fa-history"></i> История</h2>
+                <div class="history-list" id="historyList">
+                    <!-- История будет здесь -->
+                </div>
+                <button class="btn clear-history" onclick="clearHistory()">
+                    <i class="fas fa-trash"></i> Очистить историю
+                </button>
+            </div>
+
+            <!-- Избранное -->
+            <div class="favorites-section">
+                <h2><i class="fas fa-star"></i> Избранное</h2>
+                <div class="favorites-list" id="favoritesList">
+                    <!-- Избранное будет здесь -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Футер -->
+        <footer class="footer">
+            <button class="btn telegram-btn" onclick="sendToTelegram()">
+                <i class="fab fa-telegram"></i> Отправить в Telegram
+            </button>
+            <p class="version">v1.0.0 | Конвертер 50+ единиц измерения</p>
+        </footer>
+    </div>
+
+    <!-- Модальное окно информации -->
+    <div class="modal" id="infoModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3><i class="fas fa-info-circle"></i> Информация</h3>
+            <p id="modalText"></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
