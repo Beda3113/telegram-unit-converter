@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Промышленный калькулятор | Газпром</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Шапка -->
+        <header class="header">
+            <div class="header-top">
+                <h1><i class="fas fa-industry"></i> Промышленный калькулятор</h1>
+                <div class="header-info">
+                    <span class="badge"><i class="fas fa-book"></i> СТО Газпром</span>
+                    <span class="badge"><i class="fas fa-calculator"></i> v2.1.5</span>
+                </div>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user-hard-hat"></i>
+                </div>
+                <div class="user-details">
+                    <span class="user-name">Инженер Газпром</span>
+                    <span class="user-role">Технолог 1 категории</span>
+                </div>
+                <div class="header-actions">
+                    <button class="icon-btn" onclick="toggleTheme()">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="icon-btn" onclick="syncData()">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Статусная панель -->
+        <div class="status-panel">
+            <div class="status-item">
+                <i class="fas fa-gas-pump status-icon active"></i>
+                <span class="status-text">ГРС: Активен</span>
+            </div>
+            <div class="status-item">
+                <i class="fas fa-compress status-icon"></i>
+                <span class="status-text">КС: Ожидание</span>
+            </div>
+            <div class="status-item">
+                <i class="fas fa-tachometer-alt status-icon"></i>
+                <span class="status-text">ГИС: Работа</span>
+            </div>
+            <div class="status-item">
+                <i class="fas fa-pipe status-icon"></i>
+                <span class="status-text">МГ: Норма</span>
+            </div>
+        </div>
+
+        <!-- Основной контент -->
+        <main class="main-content">
+            <!-- Быстрый доступ -->
+            <div class="quick-access">
+                <h2><i class="fas fa-bolt"></i> Быстрый доступ</h2>
+                <div class="quick-buttons">
+                    <button class="quick-btn" onclick="openModule('grs')">
+                        <i class="fas fa-gas-pump"></i>
+                        <span>ГРС/ГРП</span>
+                    </button>
+                    <button class="quick-btn" onclick="openModule('kc')">
+                        <i class="fas fa-compress"></i>
+                        <span>КС</span>
+                    </button>
+                    <button class="quick-btn" onclick="openModule('gis')">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>ГИС</span>
+                    </button>
+                    <button class="quick-btn" onclick="openModule('pipeline')">
+                        <i class="fas fa-pipe"></i>
+                        <span>Трубопроводы</span>
+                    </button>
+                    <button class="quick-btn" onclick="openReports()">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Отчеты</span>
+                    </button>
+                    <button class="quick-btn" onclick="openCalculator('common')">
+                        <i class="fas fa-calculator"></i>
+                        <span>Калькулятор</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Карточки модулей -->
+            <div class="modules-grid">
+                <!-- Карточка ГРС -->
+                <div class="module-card" onclick="openModule('grs')">
+                    <div class="module-icon grs">
+                        <i class="fas fa-gas-pump"></i>
+                    </div>
+                    <div class="module-content">
+                        <h3>ГРС/ГРП</h3>
+                        <p class="module-desc">Расчеты для газораспределительных станций</p>
+                        <div class="module-stats">
+                            <span><i class="fas fa-calculator"></i> 8 расчетов</span>
+                            <span><i class="fas fa-history"></i> 12.05.2024</span>
+                        </div>
+                    </div>
+                    <div class="module-badge">СТО 3.3-2-1</div>
+                </div>
+
+                <!-- Карточка КС -->
+                <div class="module-card" onclick="openModule('kc')">
+                    <div class="module-icon kc">
+                        <i class="fas fa-compress"></i>
+                    </div>
+                    <div class="module-content">
+                        <h3>Компрессорная станция</h3>
+                        <p class="module-desc">Пусковые операции и ТО ГПА</p>
+                        <div class="module-stats">
+                            <span><i class="fas fa-calculator"></i> 12 расчетов</span>
+                            <span><i class="fas fa-history"></i> 10.05.2024</span>
+                        </div>
+                    </div>
+                    <div class="module-badge">СТО 3.3-2-1</div>
+                </div>
+
+                <!-- Карточка ГИС -->
+                <div class="module-card" onclick="openModule('gis')">
+                    <div class="module-icon gis">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <div class="module-content">
+                        <h3>Газоизмерительная станция</h3>
+                        <p class="module-desc">Измерение и учет газа</p>
+                        <div class="module-stats">
+                            <span><i class="fas fa-calculator"></i> 6 расчетов</span>
+                            <span><i class="fas fa-history"></i> 08.05.2024</span>
+                        </div>
+                    </div>
+                    <div class="module-badge">СТО 2-3.5</div>
+                </div>
+
+                <!-- Карточка Трубопроводы -->
+                <div class="module-card" onclick="openModule('pipeline')">
+                    <div class="module-icon pipeline">
+                        <i class="fas fa-pipe"></i>
+                    </div>
+                    <div class="module-content">
+                        <h3>Магистральные газопроводы</h3>
+                        <p class="module-desc">Расчеты параметров МГ</p>
+                        <div class="module-stats">
+                            <span><i class="fas fa-calculator"></i> 10 расчетов</span>
+                            <span><i class="fas fa-history"></i> 05.05.2024</span>
+                        </div>
+                    </div>
+                    <div class="module-badge">СТО 2-3.5</div>
+                </div>
+            </div>
+
+            <!-- Последние расчеты -->
+            <div class="recent-calculations">
+                <h2><i class="fas fa-history"></i> Последние расчеты</h2>
+                <div class="calculations-list">
+                    <div class="calculation-item">
+                        <div class="calc-type">
+                            <i class="fas fa-gas-pump"></i>
+                            <span>Продувка сепаратора</span>
+                        </div>
+                        <div class="calc-details">
+                            <span>Объем: 15 м³</span>
+                            <span>Давление: 1.2 МПа</span>
+                        </div>
+                        <div class="calc-result">
+                            <span class="result-value">245 м³</span>
+                            <span class="result-date">сегодня 10:30</span>
+                        </div>
+                    </div>
+                    <div class="calculation-item">
+                        <div class="calc-type">
+                            <i class="fas fa-compress"></i>
+                            <span>Пуск ГПА</span>
+                        </div>
+                        <div class="calc-details">
+                            <span>Контур: 8 м³</span>
+                            <span>Давление: 5.0 МПа</span>
+                        </div>
+                        <div class="calc-result">
+                            <span class="result-value">1,250 м³</span>
+                            <span class="result-date">вчера 14:45</span>
+                        </div>
+                    </div>
+                    <div class="calculation-item">
+                        <div class="calc-type">
+                            <i class="fas fa-pipe"></i>
+                            <span>Пропускная способность</span>
+                        </div>
+                        <div class="calc-details">
+                            <span>Диаметр: 720 мм</span>
+                            <span>Длина: 25 км</span>
+                        </div>
+                        <div class="calc-result">
+                            <span class="result-value">4.8 млн м³/сут</span>
+                            <span class="result-date">05.05.2024</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn view-all" onclick="openHistory()">
+                    <i class="fas fa-list"></i> Вся история
+                </button>
+            </div>
+
+            <!-- Статистика -->
+            <div class="statistics">
+                <h2><i class="fas fa-chart-pie"></i> Статистика за месяц</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">1,245</div>
+                        <div class="stat-label">Расчетов выполнено</div>
+                        <div class="stat-trend up">+12%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">45,280</div>
+                        <div class="stat-label">м³ рассчитано</div>
+                        <div class="stat-trend up">+8%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">98.5%</div>
+                        <div class="stat-label">Точность расчетов</div>
+                        <div class="stat-trend stable">±0.5%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">24</div>
+                        <div class="stat-label">Отчетов сформировано</div>
+                        <div class="stat-trend up">+3</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Нижнее меню -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" onclick="showHome()">
+                <i class="fas fa-home"></i>
+                <span>Главная</span>
+            </button>
+            <button class="nav-btn" onclick="openCalculator('common')">
+                <i class="fas fa-calculator"></i>
+                <span>Калькулятор</span>
+            </button>
+            <button class="nav-btn" onclick="openReports()">
+                <i class="fas fa-chart-bar"></i>
+                <span>Отчеты</span>
+            </button>
+            <button class="nav-btn" onclick="openSettings()">
+                <i class="fas fa-cog"></i>
+                <span>Настройки</span>
+            </button>
+            <button class="nav-btn" onclick="openHelp()">
+                <i class="fas fa-question-circle"></i>
+                <span>Помощь</span>
+            </button>
+        </nav>
+
+        <!-- Модальное окно помощи -->
+        <div id="helpModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h3><i class="fas fa-question-circle"></i> Помощь</h3>
+                <div class="help-content">
+                    <p>Выберите модуль для расчетов:</p>
+                    <ul>
+                        <li><strong>ГРС/ГРП</strong> - расчеты для газораспределительных станций</li>
+                        <li><strong>КС</strong> - расчеты для компрессорных станций</li>
+                        <li><strong>ГИС</strong> - расчеты для газоизмерительных станций</li>
+                        <li><strong>Трубопроводы</strong> - расчеты параметров МГ</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

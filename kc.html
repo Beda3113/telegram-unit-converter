@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>КС калькулятор | Газпром</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="module-header">
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1><i class="fas fa-compress"></i> КС калькулятор</h1>
+            <div class="module-info">
+                <span class="badge">СТО 3.3-2-1</span>
+                <span class="badge">ГПА расчеты</span>
+            </div>
+        </header>
+
+        <div class="kc-tabs">
+            <div class="kc-tab-group">
+                <h3><i class="fas fa-play-circle"></i> Пусковые операции</h3>
+                <button class="kc-tab" onclick="openKCTab('startup')">
+                    <i class="fas fa-rocket"></i> Пуск ГПА
+                </button>
+                <button class="kc-tab" onclick="openKCTab('venting')">
+                    <i class="fas fa-wind"></i> Стравливание
+                </button>
+                <button class="kc-tab" onclick="openKCTab('air')">
+                    <i class="fas fa-fan"></i> Вытеснение воздуха
+                </button>
+            </div>
+
+            <div class="kc-tab-group">
+                <h3><i class="fas fa-tools"></i> Техническое обслуживание</h3>
+                <button class="kc-tab" onclick="openKCTab('seals')">
+                    <i class="fas fa-oil-can"></i> Уплотнения
+                </button>
+                <button class="kc-tab" onclick="openKCTab('oil')">
+                    <i class="fas fa-oil-can"></i> Маслобаки
+                </button>
+                <button class="kc-tab" onclick="openKCTab('degas')">
+                    <i class="fas fa-tint"></i> Дегазация
+                </button>
+            </div>
+
+            <div class="kc-tab-group">
+                <h3><i class="fas fa-cogs"></i> Эксплуатация</h3>
+                <button class="kc-tab" onclick="openKCTab('heating')">
+                    <i class="fas fa-fire"></i> Обогрев
+                </button>
+                <button class="kc-tab" onclick="openKCTab('oxidation')">
+                    <i class="fas fa-recycle"></i> Обезвреживание
+                </button>
+                <button class="kc-tab" onclick="openKCTab('other')">
+                    <i class="fas fa-cogs"></i> Прочие
+                </button>
+            </div>
+        </div>
+
+        <!-- Контент для пуска ГПА -->
+        <div id="kc-startup" class="tab-content">
+            <h2><i class="fas fa-rocket"></i> Пуск ГПА</h2>
+            
+            <div class="gpa-selector">
+                <h3>Выберите тип ГПА:</h3>
+                <div class="gpa-types">
+                    <button class="gpa-type active" data-type="centrifugal">
+                        <i class="fas fa-fan"></i>
+                        <span>Центробежный</span>
+                    </button>
+                    <button class="gpa-type" data-type="reciprocating">
+                        <i class="fas fa-compress-arrows-alt"></i>
+                        <span>Поршневой</span>
+                    </button>
+                    <button class="gpa-type" data-type="screw">
+                        <i class="fas fa-cog"></i>
+                        <span>Винтовой</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="input-grid">
+                <div class="input-card">
+                    <h4><i class="fas fa-arrows-alt-v"></i> Объемы</h4>
+                    <div class="input-group">
+                        <label>Объем пускового газопровода:</label>
+                        <input type="number" id="startup-pipeline-volume" value="8" step="0.1">
+                        <span class="unit">м³</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Объем полости нагнетателя:</label>
+                        <input type="number" id="startup-impeller-volume" value="2.5" step="0.1">
+                        <span class="unit">м³</span>
+                    </div>
+                </div>
+
+                <div class="input-card">
+                    <h4><i class="fas fa-tachometer-alt"></i> Давления</h4>
+                    <div class="input-group">
+                        <label>Давление пускового газа:</label>
+                        <input type="number" id="startup-pressure" value="5.0" step="0.1">
+                        <span class="unit">МПа</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Температура газа:</label>
+                        <input type="number" id="startup-temperature" value="293" step="0.1">
+                        <span class="unit">К</span>
+                    </div>
+                </div>
+
+                <div class="input-card">
+                    <h4><i class="fas fa-calculator"></i> Параметры</h4>
+                    <div class="input-group">
+                        <label>Количество пусков:</label>
+                        <input type="number" id="startup-count" value="2" min="1">
+                        <span class="unit">шт/мес</span>
+                    </div>
+                    <div class="input-group">
+                        <label>Коэффициент сжимаемости:</label>
+                        <input type="number" id="startup-z" value="0.96" step="0.01">
+                        <span class="unit">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn calculate-btn large" onclick="calculateGPAStartup()">
+                <i class="fas fa-calculator"></i> Рассчитать расход на пуск ГПА
+            </button>
+
+            <div class="results-panel">
+                <div class="result-card">
+                    <h4><i class="fas fa-gas-pump"></i> Расход на один пуск</h4>
+                    <div class="result-value-large" id="gpa-startup-single">0 м³</div>
+                </div>
+                <div class="result-card">
+                    <h4><i class="fas fa-calendar-alt"></i> Месячный расход</h4>
+                    <div class="result-value-large" id="gpa-startup-monthly">0 м³</div>
+                </div>
+                <div class="result-card">
+                    <h4><i class="fas fa-chart-line"></i> Годовой расход</h4>
+                    <div class="result-value-large" id="gpa-startup-yearly">0 м³</div>
+                </div>
+            </div>
+
+            <div class="recommendations">
+                <h3><i class="fas fa-lightbulb"></i> Рекомендации по оптимизации:</h3>
+                <ul>
+                    <li>Используйте рекуперацию пускового газа</li>
+                    <li>Оптимизируйте график пусков</li>
+                    <li>Контролируйте давление пускового газа</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Другие вкладки КС... -->
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ГРС/ГРП калькулятор | Газпром</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Шапка с навигацией -->
+        <header class="module-header">
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1><i class="fas fa-gas-pump"></i> ГРС/ГРП калькулятор</h1>
+            <div class="module-info">
+                <span class="badge">СТО 3.3-2-1</span>
+                <span class="badge">Версия 2.1</span>
+            </div>
+        </header>
+
+        <!-- Вкладки расчетов -->
+        <div class="module-tabs">
+            <button class="module-tab active" onclick="openGRSTab('blowdown')">
+                <i class="fas fa-wind"></i>
+                <span>Продувка</span>
+            </button>
+            <button class="module-tab" onclick="openGRSTab('refuel')">
+                <i class="fas fa-gas-pump"></i>
+                <span>Заправка</span>
+            </button>
+            <button class="module-tab" onclick="openGRSTab('diaphragm')">
+                <i class="fas fa-compress-arrows-alt"></i>
+                <span>Диафрагмы</span>
+            </button>
+            <button class="module-tab" onclick="openGRSTab('heating')">
+                <i class="fas fa-temperature-high"></i>
+                <span>Обогрев</span>
+            </button>
+            <button class="module-tab" onclick="openGRSTab('pneumatic')">
+                <i class="fas fa-cogs"></i>
+                <span>Пневматика</span>
+            </button>
+        </div>
+
+        <!-- Контент вкладок -->
+        <div class="module-content">
+            <!-- Вкладка продувки -->
+            <div id="grs-blowdown" class="tab-content active">
+                <h2><i class="fas fa-wind"></i> Продувка сепараторов и пылеуловителей</h2>
+                
+                <div class="calculation-form">
+                    <div class="input-section">
+                        <h3>Параметры сепаратора</h3>
+                        
+                        <div class="input-group">
+                            <label for="sep-volume">
+                                <i class="fas fa-arrows-alt-v"></i> Объем сепаратора, м³
+                            </label>
+                            <div class="input-with-unit">
+                                <input type="number" id="sep-volume" value="15" step="0.1" min="1">
+                                <span class="unit">м³</span>
+                            </div>
+                            <div class="input-hint">
+                                Типовые значения: 10-50 м³
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="sep-pressure">
+                                <i class="fas fa-tachometer-alt"></i> Давление, МПа
+                            </label>
+                            <div class="input-with-unit">
+                                <input type="number" id="sep-pressure" value="1.2" step="0.01" min="0.1" max="10">
+                                <span class="unit">МПа</span>
+                            </div>
+                            <div class="input-hint">
+                                Рабочее давление в сепараторе
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="sep-temperature">
+                                <i class="fas fa-thermometer-half"></i> Температура газа, К
+                            </label>
+                            <div class="input-with-unit">
+                                <input type="number" id="sep-temperature" value="293" step="0.1" min="250" max="350">
+                                <span class="unit">К</span>
+                            </div>
+                            <div class="temp-conversion">
+                                <span id="temp-celsius">20 °C</span>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="sep-z">
+                                <i class="fas fa-balance-scale"></i> Коэффициент сжимаемости
+                            </label>
+                            <div class="input-with-unit">
+                                <input type="number" id="sep-z" value="0.95" step="0.01" min="0.8" max="1.2">
+                                <span class="unit">-</span>
+                            </div>
+                            <div class="input-hint">
+                                Для природного газа: 0.9-1.0
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="sep-blowdowns">
+                                <i class="fas fa-redo"></i> Количество продувок
+                            </label>
+                            <div class="input-with-unit">
+                                <input type="number" id="sep-blowdowns" value="4" min="1" max="100">
+                                <span class="unit">шт/мес</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="calculation-section">
+                        <button class="btn calculate-btn" onclick="calculateBlowdown()">
+                            <i class="fas fa-calculator"></i> Рассчитать
+                        </button>
+
+                        <div class="results-card">
+                            <h3><i class="fas fa-chart-line"></i> Результаты расчета</h3>
+                            
+                            <div class="result-item">
+                                <span class="result-label">Объем газа на одну продувку:</span>
+                                <span class="result-value" id="blowdown-single">0 м³</span>
+                            </div>
+                            
+                            <div class="result-item">
+                                <span class="result-label">Месячный расход:</span>
+                                <span class="result-value highlight" id="blowdown-monthly">0 м³</span>
+                            </div>
+                            
+                            <div class="result-item">
+                                <span class="result-label">Годовой расход:</span>
+                                <span class="result-value" id="blowdown-yearly">0 м³</span>
+                            </div>
+                            
+                            <div class="result-breakdown">
+                                <h4>Составляющие расхода:</h4>
+                                <div class="breakdown-item">
+                                    <span>Рабочий объем:</span>
+                                    <span id="breakdown-volume">0 м³</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span>Сжатие газа:</span>
+                                    <span id="breakdown-compression">0 м³</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span>Температурный фактор:</span>
+                                    <span id="breakdown-temperature">0 м³</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="actions">
+                            <button class="btn secondary" onclick="saveCalculation('blowdown')">
+                                <i class="fas fa-save"></i> Сохранить
+                            </button>
+                            <button class="btn secondary" onclick="exportCalculation('blowdown')">
+                                <i class="fas fa-file-export"></i> Экспорт
+                            </button>
+                            <button class="btn secondary" onclick="resetForm('blowdown')">
+                                <i class="fas fa-redo"></i> Сбросить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3><i class="fas fa-info-circle"></i> Справка</h3>
+                    <p>Расчет выполнен по методике <strong>СТО Газпром 3.3-2-1</strong>, п.1.2.1</p>
+                    <p>Точность расчета: ±2%</p>
+                    <p>Диапазон применения: давление 0.1-10 МПа, температура 250-350 К</p>
+                </div>
+            </div>
+
+            <!-- Вкладка заправки -->
+            <div id="grs-refuel" class="tab-content">
+                <h2><i class="fas fa-gas-pump"></i> Заправка установок</h2>
+                <!-- Аналогичная структура для заправки -->
+            </div>
+
+            <!-- И другие вкладки... -->
+        </div>
+
+        <!-- Сводная информация -->
+        <div class="summary-panel">
+            <h3><i class="fas fa-clipboard-list"></i> Сводка по ГРС</h3>
+            <div class="summary-stats">
+                <div class="summary-item">
+                    <span class="summary-label">Общий расход газа:</span>
+                    <span class="summary-value" id="total-grs-consumption">0 м³/мес</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Экономический эффект:</span>
+                    <span class="summary-value positive" id="grs-economy">0 руб/год</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
